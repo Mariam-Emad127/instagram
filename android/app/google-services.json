@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "46977764150",
+    "project_id": "insta-5105f",
+    "storage_bucket": "insta-5105f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46977764150:android:79440f14b3e08c4f1e0197",
+        "android_client_info": {
+          "package_name": "com.example.nstagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "46977764150-c78niu1hi91n84ff41p64cvcnfv6d7p6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nstagram",
+            "certificate_hash": "2b63e13a3d8dcd9b9fd77a069fc2072e64e23cd0"
+          }
+        },
+        {
+          "client_id": "46977764150-nf7vumgg9tdob5hfrfa58nsa9hknf1nv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRb21YPmKSvy9azfuFrZF2MwaXsuViDOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "46977764150-nf7vumgg9tdob5hfrfa58nsa9hknf1nv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "46977764150-qtl3ivbh4hkk846oksirqup28uvfmvjm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nstagram.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

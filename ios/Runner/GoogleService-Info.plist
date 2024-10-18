@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>46977764150-tjee0mh6chd8nakt4dn158nv02v9kpf4.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.46977764150-tjee0mh6chd8nakt4dn158nv02v9kpf4</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>46977764150-c78niu1hi91n84ff41p64cvcnfv6d7p6.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAkUUfh65-Uy7-btrrCDdQRAfjWcG70MGw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>46977764150</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.nstagram</string>
+	<key>PROJECT_ID</key>
+	<string>insta-5105f</string>
+	<key>STORAGE_BUCKET</key>
+	<string>insta-5105f.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:46977764150:ios:9de8641d6efcc02f1e0197</string>
+</dict>
+</plist>

@@ -22,13 +22,39 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
-Uint8List ?image;
+  bool _isLoading = false;
+  Uint8List ?image;
+
+
     selectImage() async {
    Uint8List im= await pickImage(ImageSource.gallery);
    setState(() {
      image=im;
    });
   }
+
+  void signUpUser() async {
+    // set loading to true
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthCubit().createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _usernameController.text,
+        bio: _bioController.text,
+        file: image!);
+    if (res == "success") {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    else {
+      setState(() {
+        _isLoading = false;
+      });
+
+    }}
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -78,9 +104,9 @@ Uint8List ?image;
                           bottom: -10,
                           left: 80,
                           child: IconButton(
-                            //onPressed: selectImage,
+                            onPressed: selectImage,
                             icon: const Icon(Icons.add_a_photo),
-                            onPressed: () {},
+                           // onPressed: () {},
                           ),
                         )
                       ],
@@ -122,12 +148,13 @@ Uint8List ?image;
                       height: 24,
                     ),
                     InkWell(
-                      // onTap: signUpUser,
-                      onTap: (){
-                        BlocProvider.of<AuthCubit>(context).createUserWithEmailAndPassword(
-                          // username: '', bio: '', file: null,
-                         email:  _emailController.text,password: _passwordController.text,
-                          username: _usernameController.text, bio: _bioController.text, file: null,  );},
+                       onTap: signUpUser,
+                      // onTap: (){
+                      //   BlocProvider.of<AuthCubit>(context).createUserWithEmailAndPassword(
+                      //     email:  _emailController.text,password: _passwordController.text,
+                      //     username: _usernameController.text, bio: _bioController.text, file: image!  );},
+                      //
+
                       child: Container(
                         width: double.infinity,
                         alignment: Alignment.center,
@@ -139,11 +166,11 @@ Uint8List ?image;
                           color: blueColor,
                         ),
                         child:
-                            // !_isLoading
-                            //  ?
+                             !_isLoading
+                              ?
                              const Text(  'Sign up',)
-                            //:
-                            //const CircularProgressIndicator(    color: primaryColor,  ),
+                            :
+                            const CircularProgressIndicator(    color: primaryColor,  ),
                       ),
                     ),
                     const SizedBox(
@@ -190,3 +217,4 @@ Uint8List ?image;
     );
   }
 }
+

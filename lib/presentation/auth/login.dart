@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:nstagram/presentation/auth/signin.dart';
 import 'package:nstagram/presentation/controller/auth_cubit.dart';
 import 'package:nstagram/presentation/controller/auth_state.dart';
+import 'package:nstagram/presentation/home_screen.dart';
 
 import '../../utils/color.dart';
 import '../widget/text_field_input.dart';
@@ -19,12 +20,34 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+
+  void loginUser() async {
+    // set loading to true
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthCubit().SignInWithEmailAndPassword (
+        email: _emailController.text,
+        password: _passwordController.text,
+         );
+    if (res == "success") {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomeScreen()));
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    else {
+      setState(() {
+        _isLoading = false;
+      });
+
+    }}
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthCubit>(
       create: (context) => AuthCubit(),
       child: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
+       builder: (context, state) {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             body: SafeArea(
@@ -66,10 +89,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 24,
                     ),
                     InkWell(
-                      // onTap: loginUser,
-                     onTap: () {
-                       BlocProvider.of<AuthCubit>(context).SignInWithEmailAndPassword(_emailController.text, _passwordController.text);
-                     },
+                       onTap: loginUser,
+                     // onTap: () {
+                     //   BlocProvider.of<AuthCubit>(context).SignInWithEmailAndPassword(
+                     //      email: _emailController.text,password:  _passwordController.text);
+                     //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomeScreen()));
+                     // },
                       child: Container(
                         width: double.infinity,
                         alignment: Alignment.center,
@@ -128,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           );
-        },
+       },
       ),
     );
   }

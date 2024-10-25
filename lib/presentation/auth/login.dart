@@ -5,6 +5,7 @@ import 'package:nstagram/presentation/auth/signin.dart';
 import 'package:nstagram/presentation/controller/auth_cubit.dart';
 import 'package:nstagram/presentation/controller/auth_state.dart';
 import 'package:nstagram/presentation/home_screen.dart';
+import 'package:nstagram/responsive/%20mobile_screen_layout.dart';
 
 import '../../utils/color.dart';
 import '../widget/text_field_input.dart';
@@ -31,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text,
          );
     if (res == "success") {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>HomeScreen()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>MobileScreenLayout()));
       setState(() {
         _isLoading = false;
       });

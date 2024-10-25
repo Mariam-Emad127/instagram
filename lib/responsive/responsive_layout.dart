@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nstagram/provider/user_provider.dart';
 
 import 'package:provider/provider.dart';
 
@@ -19,14 +20,14 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   @override
   void initState() {
     super.initState();
-  //  addData();
+    addData();
   }
   //
-  // addData() async {
-  //   UserProvider userProvider =
-  //   Provider.of<UserProvider>(context, listen: false);
-  //   await userProvider.refreshUser();
-  // }
+  addData() async {
+     UserProvider userProvider =
+     Provider.of<UserProvider>(context, listen: false);
+     await userProvider.refreshUser();
+   }
 
   @override
   Widget build(BuildContext context) {

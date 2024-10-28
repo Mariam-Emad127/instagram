@@ -3,10 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nstagram/presentation/auth/login.dart';
 import 'package:nstagram/provider/user_provider.dart';
- 
 import 'package:nstagram/responsive/%20mobile_screen_layout.dart';
 import 'package:provider/provider.dart';
-//import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 void main()async { 
    WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +34,7 @@ class MyApp extends StatelessWidget {
        
      child: MaterialApp(
         title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
         //darkTheme: Dar,
         //theme: ThemeData(
          //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

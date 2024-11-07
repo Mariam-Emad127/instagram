@@ -32,6 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text,
          );
     if (res == "success") {
+     // await Future.delayed(Duration(seconds: 1));
+
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>MobileScreenLayout()));
       setState(() {
         _isLoading = false;

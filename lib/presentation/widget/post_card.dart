@@ -21,33 +21,44 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
-  int commentLen=0;
+ //late
+ int commentLen=0;
+  int like =0;
+  bool islike=false;
   @override
   void initState() {
     super.initState();
     fetchCommentLen();
   }
 
-  fetchCommentLen() async {
+  Future <int>fetchCommentLen() async {
     try {
       QuerySnapshot snap = await FirebaseFirestore.instance
-          .collection('posts')
+          .collection('post')
           .doc(widget.snap['postId'])
           .collection('comment')
           .get();
-      commentLen = snap.docs.length;
-    } catch (err) {
+      //commentLen++;
+      commentLen = snap.docs.length;// length;
+      print("ggggggggggggggggghhhhhhhhhh$commentLen" );
+
+    }
+    catch (err) {
       showSnackBar(
         context,
         err.toString(),
       );
+
     }
-    setState(() {});
+    setState(() {commentLen++;});
+    return commentLen;
+
   }
   @override
   Widget build(BuildContext context) {
-    final model.User user = Provider.of<UserProvider>(context).getUser;
+    final model.User user =  Provider.of<UserProvider>(context).getUser;
     return Container(
+
       child: Column(children: [
         // HEADER SECTION OF THE POST
         Container(
@@ -68,7 +79,7 @@ class _PostCardState extends State<PostCard> {
               ),
               child: Column(children: [
                 Text(
-                  "kkk",
+              widget.snap["username"],
                   //widget.snap['username'],
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
@@ -87,7 +98,10 @@ class _PostCardState extends State<PostCard> {
                             shrinkWrap: true,
                             children: [
                               InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    FireStoreMethods().deletePost(widget.snap["postId"].toString());
+                                  Navigator.of(context).pop();
+                                  },
                                   child: Container(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 12, horizontal: 16),
@@ -118,15 +132,18 @@ alignment: Alignment.center,
   */
         // IMAGE SECTION OF THE POST
         GestureDetector(
-          onDoubleTap: () {
-            FireStoreMethods().likePost(
+          //onDoubleTap: () {
+    onTap:(){
+      setState(() {
+        isLikeAnimating = true;
+      });
+    FireStoreMethods().likePost(
               widget.snap['postId'].toString(),
               user.uid,
               widget.snap['likes'],
+              widget.snap["like"]
             );
-            setState(() {
-              isLikeAnimating = true;
-            });
+
           },
           child: Stack(
             alignment: Alignment.center,
@@ -139,45 +156,47 @@ alignment: Alignment.center,
                   fit: BoxFit.cover,
                 ),
               ),
-              AnimatedOpacity(
-                duration: const Duration(milliseconds: 200),
-                opacity: isLikeAnimating ? 1 : 0,
-                child: LikeAnimation(
-                  isAnimating: isLikeAnimating,
-                  duration: const Duration(
-                    milliseconds: 400,
-                  ),
-                  onEnd: () {
-                    setState(() {
-                      isLikeAnimating = false;
-                    });
-                  },
-                  child: const Icon(
-                    Icons.favorite,
-                    color: Colors.white,
-                    size: 100,
-                  ),
-                ),
-              ),
+              // AnimatedOpacity(
+              //   duration: const Duration(milliseconds: 200),
+              //   opacity: isLikeAnimating ? 1 : 0,
+              //   child: LikeAnimation(
+              //     isAnimating: isLikeAnimating,
+              //     duration: const Duration(
+              //       milliseconds: 400,
+              //     ),
+              //     onEnd: () {
+              //       setState(() {
+              //         isLikeAnimating = false;
+              //       });
+              //     },
+              //     child: const
+              //       Icon(
+              //       Icons.favorite,
+              //
+              //       color: Colors.white,
+              //       size: 100,
+              //     ),
+               // ),
+              //),
             ],
           ),
         ),
-        LikeAnimation(
-          isAnimating: isLikeAnimating,
-          duration: const Duration(
-            milliseconds: 400,
-          ),
-          onEnd: () {
-            setState(() {
-              isLikeAnimating = true;
-            });
-          },
-          child: Icon(
-            Icons.favorite,
-            color: Colors.white,
-            size: 100,
-          ),
-        ),
+        // LikeAnimation(
+        //   isAnimating: isLikeAnimating,
+        //   duration: const Duration(
+        //     milliseconds: 400,
+        //   ),
+        //   onEnd: () {
+        //     setState(() {
+        //       isLikeAnimating = true;
+        //     });
+        //   },
+        //   child: Icon(
+        //     Icons.favorite,
+        //     color: Colors.white,
+        //     size: 100,
+        //   ),
+        // ),
 
         Row(children: <Widget>[
           LikeAnimation(
@@ -192,8 +211,14 @@ alignment: Alignment.center,
                 color: Colors.red,
               ),
               onPressed: () {
+                setState(() {
+                  islike=true;
+               //   like++;
+                });
                 FireStoreMethods().likePost(widget.snap['postId'].toString(),
-                    user.uid, widget.snap['likes']);
+                    user.uid, widget.snap['likes'],widget.snap["like"]);
+                 //  like++;
+
               },
             ),
           ),
@@ -230,8 +255,13 @@ alignment: Alignment.center,
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  islike?
+
                   Text(
-                    "${widget.snap['likes'].length} like",
+                    "${widget.snap['like'].length} like",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ): Text(
+                    " 0 like",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   Container(
@@ -259,7 +289,7 @@ alignment: Alignment.center,
                     child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: Text(
-                          "view all ${commentLen} comment",
+                          "view all ${commentLen } comment",
                           style: const TextStyle(
                             color: secondaryColor,
                           ),

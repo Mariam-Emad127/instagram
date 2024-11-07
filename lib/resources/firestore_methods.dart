@@ -1,20 +1,22 @@
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nstagram/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
-
 import '../models/post.dart';
 
 class FireStoreMethods {
+
+
   FirebaseFirestore  firebaseFirestore=FirebaseFirestore.instance;
-  Future<String>uploadPost(String description, Uint8List file, String uid,
-      String username, String profImage)async{
+
+
+  Future<String> uploadPost(String description, Uint8List file, String uid, String username, String profImage )async
+  {
     String res = "Some error occurred";
 try{
-  String photoUrl=await StorageMethods().uploadImageToStorage( "post", file, true);
-String postId=Uuid().v1();
+var photoUrl=await StorageMethods().uploadImageToStorage( "post", file, true);
+String postId=Uuid().v4();
   Post post=Post(
   description: description,
   uid: uid,
@@ -23,25 +25,31 @@ String postId=Uuid().v1();
   postId: postId,
   datePublished: DateTime.now(),
   postUrl: photoUrl,
-  profImage: profImage,);
+  profImage: profImage,
+
+  );
   firebaseFirestore.collection( "post").doc(postId).set(post.toJson());
   res="sucess";
-}catch(e){}
+}catch(e){print(e.toString());}
 
 
     return res;
   }
 
 
-  Future<String> likePost(String postId,String uid,List likes)async{
+
+
+
+  Future<String> likePost(String postId,String uid,List likes ,like)async{
     String res = "Some error occurred";
     try{
 if(likes.contains(uid)){
 
       FirebaseFirestore.instance.collection("post").doc(postId).update( {"like":FieldValue.arrayRemove( [uid])});
-
+     like++;
 }else{
       FirebaseFirestore.instance.collection("post").doc(postId).update( {"like":FieldValue.arrayUnion( [uid])});
+
 }
    res = 'success';
     }
@@ -79,6 +87,48 @@ print(e);
 return res;
  }
 
+  // Delete Post
+  Future<String> deletePost(String postId) async {
+    String res = "Some error occurred";
+    try {
+      await FirebaseFirestore.instance.collection('post').doc(postId).delete();
 
 
+      res = 'success';
+      print("kkkkkkkkkkkkkkkkkkkkkkkkkk");
+      print(res);
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<void> followUser(String uid, String followId) async {
+    try {
+      DocumentSnapshot snap = await   FirebaseFirestore.instance.collection('users').doc(uid).get();
+      List following= (snap.data() as dynamic)["following"];
+      if(following.contains(followId)){
+await  FirebaseFirestore.instance.collection('users').doc(uid).update( {
+  
+  "following":FieldValue.arrayRemove([uid])
+});
+
+await  FirebaseFirestore.instance.collection('users').doc(uid).update({
+  'following': FieldValue.arrayRemove([followId])
+});
+      } else {
+        await  FirebaseFirestore.instance.collection('users').doc(followId).update({
+          'followers': FieldValue.arrayUnion([uid])
+        });
+        await  FirebaseFirestore.instance.collection('users').doc(followId).update({
+          'followers': FieldValue.arrayUnion([followId])
+        });
+      }
+
+    }catch(e){
+      print(e.toString());}
+
+
+
+  }
 }

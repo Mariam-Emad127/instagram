@@ -89,6 +89,7 @@ setState(() {
     icon: Icon(
     Icons.search,
     color: (_page == 1) ? primaryColor : secondaryColor,
+    
     ),
     label: '',
     backgroundColor: primaryColor),
@@ -119,7 +120,8 @@ setState(() {
 
         ],
         
-        
+        onTap: navigationTapped,
+         currentIndex: _page,
       ),
     );
   }

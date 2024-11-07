@@ -83,6 +83,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
                   InkWell(
                     onTap: () async {
+
                       await FireStoreMethods().postComment(
                          // widget.snap["postId"].toString(),
                           widget.snap,
@@ -91,6 +92,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
                           user.uid,
                           user.username,
                           user.photoUrl);
+                      setState(() {
+
+                      });
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(

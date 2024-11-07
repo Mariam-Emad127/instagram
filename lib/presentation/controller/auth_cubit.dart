@@ -33,7 +33,7 @@ try {
   );
 
   print(credential.user!.uid);
-String photoUrl= await StorageMethods().uploadImageToStorage("profile", file, false);
+ String photoUrl= await StorageMethods().uploadImageToStorage("profile", file, false);
 model.User user=model.User(   username: username,
     uid: credential.user!.uid,
     photoUrl: photoUrl,

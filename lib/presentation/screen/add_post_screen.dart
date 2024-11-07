@@ -17,6 +17,7 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
   bool isLoading = false;
+  bool isLike=false;
   final TextEditingController _descriptionController = TextEditingController();
 
   _selectImage(BuildContext context) {
@@ -24,7 +25,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         context: context,
         builder: (context) {
           return SimpleDialog(
-            title: Text("Choose image"),
+            title: const Text("Choose image"),
             children: [
               SimpleDialogOption(
                 padding: const EdgeInsets.all(20),
@@ -59,6 +60,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void postImage(String uid, String username, String profImage) async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       String res = await FireStoreMethods().uploadPost(
           _descriptionController.text, _file!, uid, username, profImage);
@@ -72,9 +76,29 @@ class _AddPostScreenState extends State<AddPostScreen> {
             'Posted!',
           );
         }
+        if (context.mounted) {
+          showSnackBar(
+            context,
+            'Posted!',
+          );
+        }
+        clearImage();
+      } else {
+        if (context.mounted) {
+          showSnackBar(context, res);
+        }
       }
-    } catch (e) {}
+    } catch (err) {
+      setState(() {
+        isLoading = false;
+      });
+      showSnackBar(
+        context,
+        err.toString(),
+      );
+    }
   }
+
 
   void clearImage() {
     setState(() {
@@ -89,7 +113,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final User user = Provider.of<UserProvider>(context).getUser;
+    //final User user = Provider.of<UserProvider>(context).getUser;
+   final UserProvider userProvider = Provider.of<UserProvider>(context) ;
     return _file == null
         ? Center(
             child: IconButton(
@@ -103,13 +128,18 @@ class _AddPostScreenState extends State<AddPostScreen> {
             appBar: AppBar(
               title: Text('Post '),
               leading: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: clearImage,
               ),
               actions: [
                 TextButton(
                   onPressed: () =>
-                      postImage(user.uid, user.username, user.photoUrl),
+                      postImage(
+                        userProvider.getUser.uid,
+                        userProvider.getUser.username,
+                        userProvider.getUser.photoUrl,
+                      //    userProvider.uid, user.username, user.photoUrl
+                      ),
                   child: Text(
                     'Post to',
                     style: TextStyle(
@@ -129,7 +159,10 @@ isLoading?LinearProgressIndicator():Padding(padding: EdgeInsets.only(top: 0),chi
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(backgroundImage: NetworkImage(user.photoUrl)
+                  CircleAvatar(backgroundImage: NetworkImage(
+                    userProvider.getUser.photoUrl,
+                  //    user.photoUrl
+                  )
                       //    "https://images.unsplash.com/photo-1729027399111-e301fa0e14fa?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
                       ),
                   SizedBox(
@@ -152,7 +185,7 @@ isLoading?LinearProgressIndicator():Padding(padding: EdgeInsets.only(top: 0),chi
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: MemoryImage(
-                                      //    "https://images.unsplash.com/photo-1729027399111-e301fa0e14fa?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+
                                       _file!),
                                   fit: BoxFit.fill,
                                   alignment: FractionalOffset.topCenter)),

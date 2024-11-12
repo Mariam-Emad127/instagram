@@ -222,8 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return SizedBox(
 
             child: Image(
-              image: NetworkImage( (snap['postUrl'].toString())?? "https://firebasestorage.googleapis.com/v0/b/insta-5105f.appspot.com/o/post%2F3wCdEVlNzTX8dY9ZuRywVnjfekf2?alt=media&token=efda48e7-eddf-4241-9834-698069695224"  ),
-
+              image: NetworkImage( snap['postUrl'].toString()),
               fit: BoxFit.cover,
             ),
           );

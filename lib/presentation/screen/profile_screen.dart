@@ -1,17 +1,21 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../../resources/firestore_methods.dart';
+import '../../resources/storage_methods.dart';
 import '../../utils/color.dart';
 import '../../utils/utils.dart';
 import '../widget/follow_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String uid;
-
-  const ProfileScreen({super.key, required this.uid});
+ // final dynamic postid;
+  const ProfileScreen({super.key, required this.uid });
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -24,12 +28,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int following = 0;
   bool isFollowing = false;
   bool isLoading = false;
+  //String postUrl="";
+  List<Reference> file = [];
 
-  @override
-  void initState() {
-    getData();
-    super.initState();
-  }
 
   getData() async {
     setState(() {
@@ -47,10 +48,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
 
-      postLen = postSnap.docs.length;
+    //  postLen = postSnap.docs.length;
       userData = userSnap.data()!;
+      String postUrl = userSnap.data()!["postUrl"];
       followers = userSnap.data()!["followers"];
       following = userSnap.data()!["following"];
+      print(postUrl);
       setState(() {});
     } catch (e) {
       showSnackBar(
@@ -62,7 +65,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isLoading = false;
     });
   }
-
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return  isLoading
@@ -79,11 +86,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           centerTitle: false,
         ),
-        body: ListView(children: [
+        body: ListView(
+
+            children: [
           Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(children: [
-                Row(children: [
+              child: Column(
+
+                  children: [
+                Row(
+
+                    children: [
+
                   CircleAvatar(
                     backgroundColor: Colors.grey,
                     backgroundImage: NetworkImage(
@@ -171,18 +185,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     top: 1,
                   ),
                   child: Text(
-                    'bio',
+                    userData['bio'],
                   ),
                 ),
 
 
                 const Divider(),
                 FutureBuilder(
-                future: FirebaseFirestore.instance
-        .collection('posts')
+                 //   future: Future.delayed(Duration(milliseconds:40 )),
+                future:FirebaseFirestore.instance
+        .collection('post')
         .where('uid', isEqualTo: widget.uid)
         .get(),
-    builder: (context, snapshot) {
+                    //Future.delayed(Duration(milliseconds:40 ) ),
+
+     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const Center(
           child: CircularProgressIndicator(),
@@ -200,12 +217,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           childAspectRatio: 1,
         ),
         itemBuilder: (context, index) {
-          DocumentSnapshot snap =
-          snapshot.data!.docs[index];
+           DocumentSnapshot snap =( snapshot.data!).docs[index];
 
           return SizedBox(
+
             child: Image(
-              image: NetworkImage(snap['postUrl']),
+              image: NetworkImage( (snap['postUrl'].toString())?? "https://firebasestorage.googleapis.com/v0/b/insta-5105f.appspot.com/o/post%2F3wCdEVlNzTX8dY9ZuRywVnjfekf2?alt=media&token=efda48e7-eddf-4241-9834-698069695224"  ),
+
               fit: BoxFit.cover,
             ),
           );
@@ -245,4 +263,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
+
+  void uploaded() async {
+    List<Reference>?result=await StorageMethods().getFile();
+    if(result!= null){
+
+      setState(() {
+        file=result;
+      });
+    }
+
+  }
+
+
 }

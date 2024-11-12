@@ -37,18 +37,15 @@ String postId=Uuid().v4();
   }
 
 
-
-
-
-  Future<String> likePost(String postId,String uid,List likes ,like)async{
+  Future<String> likePost(String postId,String uid,List likes  )async{
     String res = "Some error occurred";
     try{
 if(likes.contains(uid)){
 
-      FirebaseFirestore.instance.collection("post").doc(postId).update( {"like":FieldValue.arrayRemove( [uid])});
-     like++;
+      FirebaseFirestore.instance.collection("post").doc(postId).update( {"likes":FieldValue.arrayRemove( [uid])});
+
 }else{
-      FirebaseFirestore.instance.collection("post").doc(postId).update( {"like":FieldValue.arrayUnion( [uid])});
+      FirebaseFirestore.instance.collection("post").doc(postId).update( {"likes":FieldValue.arrayUnion( [uid])});
 
 }
    res = 'success';

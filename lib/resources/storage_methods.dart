@@ -11,10 +11,11 @@ FirebaseStorage storage=FirebaseStorage.instance;
 FirebaseAuth _auth=FirebaseAuth.instance;
 
 Future<String> uploadImageToStorage(String childname,Uint8List file,bool isPost )async{
+ final time=DateTime.now().microsecondsSinceEpoch;
   // creating location to our firebase storage
 Reference reference=
-FirebaseStorage.instance.ref().child("$childname/").child(FirebaseAuth.instance.currentUser!.uid);//.putData(file);
- ListResult result = await reference.listAll();
+FirebaseStorage.instance.ref().child("childname/$time").child(FirebaseAuth.instance.currentUser!.uid);//.putData(file);
+
 
 if(isPost){
   String id =Uuid().v4();
@@ -24,7 +25,6 @@ UploadTask uploadTask=reference.putData(file);
 TaskSnapshot snapshot=await uploadTask;
 
 String downloadUrl=await snapshot.ref.getDownloadURL();
-  //_downloadUrls.add(downloadUrl);
 return downloadUrl;
 //return url;
 
@@ -34,18 +34,25 @@ return downloadUrl;
 Future<model.User>getUserDetails()async{
  User currentUser =_auth.currentUser!;
 DocumentSnapshot snap=await 
-//FirebaseAuth.instance.
 FirebaseFirestore.instance.collection( "users").doc(currentUser.uid).get();
 
-//return snap.data() as Map<String,dynamic>; 
 return model.User.fromSnap(
   snap
-  
+//return snap.data() as Map<String,dynamic>;
   //email:(snap.data() as Map<String,dynamic>)["email"],  
    
   );
 }
- 
+ Future<List<Reference>?>getFile()async{
+  try{
+final storageref=FirebaseStorage.instance.ref();
+final uploadstorage=storageref.child("post");
+  final uploads= await uploadstorage.listAll();
+  return uploads.items;
+  }
+  catch(e){print(e); }
+
+ }
 }
 
  

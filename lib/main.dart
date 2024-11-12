@@ -6,6 +6,7 @@ import 'package:nstagram/provider/user_provider.dart';
 import 'package:nstagram/responsive/%20mobile_screen_layout.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'utils/color.dart';
 void main()async { 
    WidgetsFlutterBinding.ensureInitialized();
   //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
      
     return MultiProvider(
+
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider(),),
       ],
@@ -35,11 +37,13 @@ class MyApp extends StatelessWidget {
      child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
-        //darkTheme: Dar,
-        //theme: ThemeData(
-         //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      //useMaterial3: true, ),
-        theme: ThemeData.dark(),
+       theme: ThemeData.dark().copyWith(
+         scaffoldBackgroundColor: mobileBackgroundColor,
+       ),
+//       theme: ThemeData(backgroundColor: mobileBackgroundColor),
+
+
+
         home:StreamBuilder(stream:FirebaseAuth.instance.authStateChanges(),
             builder:(context,snapshot){
           if (snapshot.connectionState == ConnectionState.active) {
@@ -64,7 +68,6 @@ class MyApp extends StatelessWidget {
      
         },
         ),
-        //LoginScreen()
       )
     );
   }

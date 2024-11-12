@@ -36,18 +36,9 @@ class FeedScreen extends StatelessWidget {
             );
           }
 
-    //
-    //       return ListView.builder(
-    //           itemCount:snapshot.data!.docs.length ,
-    //
-    //           itemBuilder: ((context, index) =>
-    //
-    //
-    //       PostCard( snap: snapshot.data!.docs[index].data() )
-    //
-    // )
-    //        );
+
     return FutureBuilder(
+
     future: Future.delayed(Duration(milliseconds:40 )),
     builder: (context, delaySnapshot) {
       if (delaySnapshot.connectionState == ConnectionState.waiting) {

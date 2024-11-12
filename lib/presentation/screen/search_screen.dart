@@ -18,6 +18,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         title: Form(
@@ -49,7 +50,18 @@ class _SearchScreenState extends State<SearchScreen> {
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap:()=> Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ProfileScreen(uid: (snapshot.data! as dynamic).docs[index]["uid"]))),
+                      builder: (context) => ProfileScreen(uid: (snapshot.data! as dynamic).docs[index]["uid"],
+                      //  postid:(snapshot.data! as dynamic).docs[index]["postId"] ,
+                      )
+
+
+
+
+
+                  )
+
+
+                  ),
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(

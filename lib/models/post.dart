@@ -4,7 +4,7 @@ class Post {
   final String description;
   final String uid;
   final String username;
-  final List likes;
+  final List<String> likes;
   final String postId;
   final DateTime datePublished;
   final String postUrl;
@@ -33,7 +33,7 @@ class Post {
         postId: snapshot["postId"],
         datePublished: snapshot["datePublished"],
         username: snapshot["username"],
-        postUrl: snapshot['postUrl'],
+        postUrl: snapshot['postUrl']??"https://firebasestorage.googleapis.com/v0/b/insta-5105f.appspot.com/o/post%2F3wCdEVlNzTX8dY9ZuRywVnjfekf2?alt=media&token=efda48e7-eddf-4241-9834-698069695224",
         profImage: snapshot['profImage'],
 
 

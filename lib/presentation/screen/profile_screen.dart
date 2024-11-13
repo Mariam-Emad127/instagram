@@ -24,12 +24,11 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   var userData = {};
   int postLen = 0;
-  int followers = 0;
-  int following = 0;
+  List followers = [];
+  List following = [];
   bool isFollowing = false;
   bool isLoading = false;
-  //String postUrl="";
-  List<Reference> file = [];
+
 
 
   getData() async {
@@ -44,15 +43,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       // get post lENGTH
       var postSnap = await FirebaseFirestore.instance
-          .collection('posts')
+          .collection('post')
           .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
 
     //  postLen = postSnap.docs.length;
       userData = userSnap.data()!;
-      String postUrl = userSnap.data()!["postUrl"];
+      String postUrl = userSnap.data()!["postUrl"]??"";
       followers = userSnap.data()!["followers"];
       following = userSnap.data()!["following"];
+      postLen=postSnap.docs.length;
       print(postUrl);
       setState(() {});
     } catch (e) {
@@ -113,8 +113,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             buildStatColumn(postLen, "posts"),
-                            buildStatColumn(followers, "followers"),
-                            buildStatColumn(following, "following"),
+                            buildStatColumn(followers.length, "followers"),
+                            buildStatColumn(following.length, "following"),
                           ],
                         ),
                         Row(
@@ -141,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             userData['uid'],);
                                           setState(() {
                                             isFollowing = false;
-                                            followers--;
+                                            followers.length--;
                                           });
                                         }
                             )
@@ -159,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           userData['uid'],);
                                         setState(() {
                                           isFollowing = true;
-                                          followers++;
+                                          followers.length++;
                                         });
                                         })
                           ],
@@ -199,37 +199,80 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .get(),
                     //Future.delayed(Duration(milliseconds:40 ) ),
 
-     builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+     builder: (context,  snapshot) {
+    // if (snapshot.hasData&&snapshot.data!=null&& snapshot.connectionState != ConnectionState.waiting){
+       if (snapshot.connectionState == ConnectionState.active) {
+     if(snapshot.hasData){
+    return GridView.builder(
+    shrinkWrap: true,
+    itemCount: snapshot.data ?.docs.length,
+    gridDelegate:
+    const SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 3,
+    crossAxisSpacing: 5,
+    mainAxisSpacing: 1.5,
+    childAspectRatio: 1,
+    ),
+    itemBuilder: (context, index) {
+    DocumentSnapshot snap =snapshot.data!.docs[index];
+
+    return SizedBox(
+
+    child: Image(
+    image: NetworkImage( snap['postUrl'] ?? ""),
+    fit: BoxFit.cover,
+    ),
+    );
+    },
+
+    );
+    }
+    else if (snapshot.hasError) {
+    return Center(
+    child: CircularProgressIndicator(),
+   // child: Text('${snapshot.error}'),
+    );
+    }
+
+       }
+       if (snapshot.connectionState == ConnectionState.waiting) {
+         return const Center(
+           child: CircularProgressIndicator(),
+         );
+
+       }
+
+       return GridView.builder(
+         shrinkWrap: true,
+         itemCount: snapshot.data ?.docs.length,
+         gridDelegate:
+         const SliverGridDelegateWithFixedCrossAxisCount(
+           crossAxisCount: 3,
+           crossAxisSpacing: 5,
+           mainAxisSpacing: 1.5,
+           childAspectRatio: 1,
+         ),
+         itemBuilder: (context, index) {
+           DocumentSnapshot snap =snapshot.data!.docs[index];
+
+           return SizedBox(
+
+             child: Image(
+               image: NetworkImage( snap['postUrl'] ?? ""),
+               fit: BoxFit.cover,
+             ),
+           );
+         },
+
+       );
+        // return const Center(
+        //   child: CircularProgressIndicator(),
+        // );
       }
 
-      return GridView.builder(
-        shrinkWrap: true,
-        itemCount: (snapshot.data! as dynamic).docs.length,
-        gridDelegate:
-        const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 1.5,
-          childAspectRatio: 1,
-        ),
-        itemBuilder: (context, index) {
-           DocumentSnapshot snap =( snapshot.data!).docs[index];
 
-          return SizedBox(
-
-            child: Image(
-              image: NetworkImage( snap['postUrl'].toString()),
-              fit: BoxFit.cover,
-            ),
-          );
-        },
-
-      );
-    })
+    //}
+    )
 
 
               ]))
@@ -263,16 +306,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void uploaded() async {
-    List<Reference>?result=await StorageMethods().getFile();
-    if(result!= null){
-
-      setState(() {
-        file=result;
-      });
-    }
 
   }
 
 
-}
+

@@ -8,7 +8,7 @@ class UserProvider with ChangeNotifier {
 
   User get getUser => _user!;
 
-  // Future.delayed(Duration (milliseconds: 30),
+
 
   Future<void> refreshUser() async {
     User user = await storageMethods.getUserDetails();

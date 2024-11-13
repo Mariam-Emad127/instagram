@@ -24,7 +24,7 @@ class FeedScreen extends StatelessWidget {
 
       StreamBuilder (
         stream:FirebaseFirestore.instance.collection("post").snapshots(),
-         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot)  {
+         builder: (BuildContext context,  snapshot)  {
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -37,27 +37,35 @@ class FeedScreen extends StatelessWidget {
           }
 
 
-    return FutureBuilder(
-
-    future: Future.delayed(Duration(milliseconds:40 )),
-    builder: (context, delaySnapshot) {
-      if (delaySnapshot.connectionState == ConnectionState.waiting) {
-        return const Center(
-          child: CircularProgressIndicator(),
+    // return FutureBuilder(
+    //
+    // future: Future.delayed(Duration(milliseconds:10 )),
+    //builder: (context, delaySnapshot) {
+       if (snapshot.connectionState == ConnectionState.waiting&&snapshot.data==null){
+    return const Center(child: CircularProgressIndicator(),);
+    }
+    if (snapshot.connectionState == ConnectionState.active&&snapshot!=null ) {
+      if (snapshot.hasData) {
+        return ListView.builder(
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, index) =>
+              PostCard(
+                snap: snapshot.data?.docs[index].data()  ,
+              ),
         );
       }
+    }
 
-      return ListView.builder(
-        itemCount: snapshot.data!.docs.length,
-        itemBuilder: (context, index) =>
-            PostCard(
-              snap: snapshot.data!.docs[index].data(),
-            ),
-      );
-    } );
+       return   Center(
+         child: CircularProgressIndicator(),
+       );
+    }
+
+
+      //);
           
           // PostCard();
-        },
+       // },
  
       ),
     );

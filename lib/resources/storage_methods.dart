@@ -30,9 +30,9 @@ return downloadUrl;
 
 }
 
-
 Future<model.User>getUserDetails()async{
- User currentUser =_auth.currentUser!;
+
+ User currentUser =await _auth.currentUser!;
 DocumentSnapshot snap=await 
 FirebaseFirestore.instance.collection( "users").doc(currentUser.uid).get();
 

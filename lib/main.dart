@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
           }
           else if (snapshot.hasError) {
       return Center(
+      //  child: CircularProgressIndicator(),
       child: Text('${snapshot.error}'),
       );
       }}
